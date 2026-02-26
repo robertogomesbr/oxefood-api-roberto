@@ -1,3 +1,4 @@
+package br.com.ifpe.oxefood.util.entity;
 
 import java.time.LocalDate;
 
