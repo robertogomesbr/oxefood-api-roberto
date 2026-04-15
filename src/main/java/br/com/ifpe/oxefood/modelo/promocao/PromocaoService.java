@@ -16,6 +16,7 @@ public class PromocaoService {
     public Promocao save(Promocao promocao) {
 
         promocao.setHabilitado(Boolean.TRUE);
+        promocao.setPromoValida(Boolean.TRUE);
         return repository.save(promocao);
     }
 
