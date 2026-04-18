@@ -17,7 +17,7 @@ public class ProdutoService {
     @Transactional
     public Produto save(Produto produto) {
 
-        if (produto.getValorUnitario() < 10) {
+        if (produto.getValorUnitario() < 20 && produto.getValorUnitario() > 100) {
             throw new ProdutoException(ProdutoException.MSG_VALOR_MINIMO_PRODUTO);
         }
 
@@ -37,6 +37,11 @@ public class ProdutoService {
 
     @Transactional
     public void update(Long id, Produto produtoAlterado) {
+
+        
+        if (produtoAlterado.getValorUnitario() < 20 || produtoAlterado.getValorUnitario() > 100) {
+            throw new ProdutoException(ProdutoException.MSG_VALOR_MINIMO_PRODUTO);
+        }
 
         Produto produto = repository.findById(id).get();
         produto.setCategoria(produtoAlterado.getCategoria());

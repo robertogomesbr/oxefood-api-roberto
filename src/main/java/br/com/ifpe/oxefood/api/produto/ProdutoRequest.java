@@ -17,25 +17,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProdutoRequest {
 
+    @NotNull(message = "A Categoria é de preenchimento obrigatório")
     private Long idCategoria;
     
+    @NotBlank(message = "O Código é de preenchimento obrigatório")
     private String codigo;
 
-    @NotNull(message = "O Nome é de preenchimento obrigatório")
-    @NotEmpty(message = "O Nome é de preenchimento obrigatório")
-    @Length(max = 50, message = "O Nome deverá ter no máximo {max} caracteres")
+    @NotNull(message = "O Título é de preenchimento obrigatório")
+    @NotEmpty(message = "O Título é de preenchimento obrigatório")
+    @Length(max = 50, message = "O Título deverá ter no máximo {max} caracteres")
     private String titulo;
 
   
     private String descricao;
 
-    @NotBlank(message = "O valor é de preenchimento obrigatório")
+    @NotNull(message = "O Valor é de preenchimento obrigatório")
     private Double valorUnitario;
 
-    @NotBlank(message = "O tempo mínimo é de preenchimento obrigatório")
     private Integer tempoDeEntregaMinimo;
 
-    @NotBlank(message = "O tempo máximo é de preenchimento obrigatório")
     private Integer tempoDeEntregaMaximo;
 
     public Produto build() {

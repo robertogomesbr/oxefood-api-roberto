@@ -11,6 +11,7 @@ import br.com.ifpe.oxefood.modelo.entregador.Entregador;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EntregadorRequest {
 
-    @NotNull(message = "O Nome é de preenchimento obrigatório")
-    @NotEmpty(message = "O Nome é de preenchimento obrigatório")
+    @NotBlank(message = "O Nome é de preenchimento obrigatório")
     @Length(max = 100, message = "O Nome deverá ter no máximo {max} caracteres")
     private String nome;
 
@@ -33,6 +33,7 @@ public class EntregadorRequest {
 
     private String rg;
 
+    @Past(message = "A Data deve ser válida.")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
 

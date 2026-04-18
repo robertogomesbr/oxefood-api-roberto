@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.ifpe.oxefood.util.exception.ClienteException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -19,6 +20,10 @@ public class ClienteService {
 
     @Transactional
     public Cliente save(Cliente cliente) {
+
+        if (!cliente.getFoneCelular().startsWith("81")) {
+            throw new ClienteException(ClienteException.MSG_PREFIXO_CLIENTE);
+        }
 
         cliente.setHabilitado(Boolean.TRUE);
         return repository.save(cliente);
@@ -36,6 +41,10 @@ public class ClienteService {
 
     @Transactional
     public void update(Long id, Cliente clienteAlterado) {
+
+        if (!clienteAlterado.getFoneCelular().startsWith("(81)")) {
+            throw new ClienteException(ClienteException.MSG_PREFIXO_CLIENTE);
+        }
 
         Cliente cliente = repository.findById(id).get();
         cliente.setNome(clienteAlterado.getNome());

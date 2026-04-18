@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
 public class ClienteException extends RuntimeException {
     
-    public static final String MSG_VALOR_MINIMO_PRODUTO = "";
+    public static final String MSG_PREFIXO_CLIENTE = "Só são permitidos DDD 81 no telefone";
 
     public ClienteException(String msg) {
 

@@ -8,6 +8,7 @@ import br.com.ifpe.oxefood.util.entity.EntidadeAuditavel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,10 +26,10 @@ import lombok.Setter;
 
 public class Entregador extends EntidadeAuditavel {
     
-    @Column
+    @Column(nullable = false, length = 100)
     private String nome;
 
-    @Column
+    @Column(unique = true)
     private String cpf;
     
     @Column
@@ -37,7 +38,7 @@ public class Entregador extends EntidadeAuditavel {
     @Column
     private LocalDate dataNascimento;
 
-    @Column
+    @Column(nullable = false)
     private String foneCelular;
 
     @Column

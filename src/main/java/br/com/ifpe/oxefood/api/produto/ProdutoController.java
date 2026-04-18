@@ -52,7 +52,7 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> update(@PathVariable("id") Long id, @RequestBody ProdutoRequest request) {
+    public ResponseEntity<Produto> update(@PathVariable("id") Long id, @RequestBody @Valid ProdutoRequest request) {
 
         Produto produto = request.build();
         produto.setCategoria(categoriaProdutoService.obterPorID(request.getIdCategoria()));
