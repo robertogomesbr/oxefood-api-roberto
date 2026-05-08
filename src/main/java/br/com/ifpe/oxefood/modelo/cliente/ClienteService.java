@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.ifpe.oxefood.modelo.acesso.Perfil;
+import br.com.ifpe.oxefood.modelo.acesso.PerfilRepository;
+import br.com.ifpe.oxefood.modelo.acesso.UsuarioService;
 import br.com.ifpe.oxefood.util.exception.ClienteException;
 import jakarta.transaction.Transactional;
 
@@ -18,11 +21,24 @@ public class ClienteService {
     @Autowired
     private EnderecoClienteRepository enderecoClienteRepository;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private PerfilRepository perfilUsuarioRepository;
+
     @Transactional
     public Cliente save(Cliente cliente) {
 
         if (!cliente.getFoneCelular().startsWith("81")) {
             throw new ClienteException(ClienteException.MSG_PREFIXO_CLIENTE);
+        }
+
+        usuarioService.save(cliente.getUsuario());
+
+        for (Perfil perfil : cliente.getUsuario().getRoles()) {
+            perfil.setHabilitado(Boolean.TRUE);
+            perfilUsuarioRepository.save(perfil);
         }
 
         cliente.setHabilitado(Boolean.TRUE);
