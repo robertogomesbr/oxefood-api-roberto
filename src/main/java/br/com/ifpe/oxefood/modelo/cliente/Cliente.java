@@ -41,6 +41,9 @@ public class Cliente extends EntidadeAuditavel {
     @Fetch(FetchMode.SUBSELECT)
     private List<EnderecoCliente> enderecos;
 
+    @Column
+    private String email;
+
     @Column(nullable = false, length = 100)
     private String nome;
 

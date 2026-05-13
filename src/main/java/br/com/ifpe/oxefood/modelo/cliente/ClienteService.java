@@ -10,6 +10,7 @@ import br.com.ifpe.oxefood.modelo.acesso.Perfil;
 import br.com.ifpe.oxefood.modelo.acesso.PerfilRepository;
 import br.com.ifpe.oxefood.modelo.acesso.Usuario;
 import br.com.ifpe.oxefood.modelo.acesso.UsuarioService;
+import br.com.ifpe.oxefood.modelo.mensagens.EmailService;
 import br.com.ifpe.oxefood.util.exception.ClienteException;
 import jakarta.transaction.Transactional;
 
@@ -28,6 +29,9 @@ public class ClienteService {
     @Autowired
     private PerfilRepository perfilUsuarioRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @Transactional
     public Cliente save(Cliente cliente, Usuario usuarioLogado) {
 
@@ -44,7 +48,13 @@ public class ClienteService {
 
         cliente.setHabilitado(Boolean.TRUE);
         cliente.setCriadoPor(usuarioLogado);
-        return repository.save(cliente);
+
+        Cliente clienteSalvo = repository.save(cliente);
+
+        emailService.enviarEmailConfirmacaoCadastroCliente(clienteSalvo);
+
+        return clienteSalvo;
+
     }
 
     public List<Cliente> listarTodos() {
@@ -136,6 +146,27 @@ public class ClienteService {
         Cliente cliente = this.obterPorID(endereco.getCliente().getId());
         cliente.getEnderecos().remove(endereco);
         repository.save(cliente);
+    }
+
+    public List<Cliente> filtrar(String nome, String cpf) {
+
+        if ((nome != null && !"".equals(nome)) &&
+                (cpf == null || "".equals(cpf))) {
+
+            return repository.findByNomeContainingIgnoreCaseOrderByNomeAsc(nome);
+
+        } else if ((nome == null || "".equals(nome)) &&
+                (cpf != null && !"".equals(cpf))) {
+
+            return repository.consultarPorCpf(cpf);
+
+        } else if ((nome != null && !"".equals(nome)) &&
+                (cpf != null && !"".equals(cpf))) {
+
+            return repository.consultarPorNomeECpf(nome, cpf);
+        }
+
+        return repository.findAll();
     }
 
 }
