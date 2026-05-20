@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import br.com.ifpe.oxefood.util.Util;
 import br.com.ifpe.oxefood.util.exception.ProdutoException;
 import jakarta.transaction.Transactional;
 
@@ -38,7 +40,6 @@ public class ProdutoService {
     @Transactional
     public void update(Long id, Produto produtoAlterado) {
 
-        
         if (produtoAlterado.getValorUnitario() < 20 || produtoAlterado.getValorUnitario() > 100) {
             throw new ProdutoException(ProdutoException.MSG_VALOR_MINIMO_PRODUTO);
         }
@@ -66,30 +67,41 @@ public class ProdutoService {
 
     public List<Produto> filtrar(String codigo, String titulo, Long idCategoria) {
 
-       List<Produto> listaProdutos = repository.findAll();
+        List<Produto> listaProdutos = repository.findAll();
 
-       if ((codigo != null && !"".equals(codigo)) &&
-           (titulo == null || "".equals(titulo)) &&
-           (idCategoria == null)) {
-               listaProdutos = repository.consultarPorCodigo(codigo);
-       } else if (
-           (codigo == null || "".equals(codigo)) &&
-           (titulo != null && !"".equals(titulo)) &&
-           (idCategoria == null)) {    
-               listaProdutos = repository.findByTituloContainingIgnoreCaseOrderByTituloAsc(titulo);
-       } else if (
-           (codigo == null || "".equals(codigo)) &&
-           (titulo == null || "".equals(titulo)) &&
-           (idCategoria != null)) {
-               listaProdutos = repository.consultarPorCategoria(idCategoria); 
-       } else if (
-           (codigo == null || "".equals(codigo)) &&
-           (titulo != null && !"".equals(titulo)) &&
-           (idCategoria != null)) {
-               listaProdutos = repository.consultarPorTituloECategoria(titulo, idCategoria); 
-       }
+        if ((codigo != null && !"".equals(codigo)) &&
+                (titulo == null || "".equals(titulo)) &&
+                (idCategoria == null)) {
+            listaProdutos = repository.consultarPorCodigo(codigo);
+        } else if ((codigo == null || "".equals(codigo)) &&
+                (titulo != null && !"".equals(titulo)) &&
+                (idCategoria == null)) {
+            listaProdutos = repository.findByTituloContainingIgnoreCaseOrderByTituloAsc(titulo);
+        } else if ((codigo == null || "".equals(codigo)) &&
+                (titulo == null || "".equals(titulo)) &&
+                (idCategoria != null)) {
+            listaProdutos = repository.consultarPorCategoria(idCategoria);
+        } else if ((codigo == null || "".equals(codigo)) &&
+                (titulo != null && !"".equals(titulo)) &&
+                (idCategoria != null)) {
+            listaProdutos = repository.consultarPorTituloECategoria(titulo, idCategoria);
+        }
 
-       return listaProdutos;
+        return listaProdutos;
+    }
+
+    @Transactional
+    public Produto saveImage(Long id, MultipartFile imagem) {
+
+        Produto produto = obterPorID(id);
+
+        String imagemUpada = Util.fazerUploadImagem(imagem);
+
+        if (imagemUpada != null) {
+            produto.setImagem(imagemUpada);
+        }
+
+        return save(produto);
     }
 
 }

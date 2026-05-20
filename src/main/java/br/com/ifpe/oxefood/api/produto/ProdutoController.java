@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.ifpe.oxefood.modelo.produto.CategoriaProdutoService;
 import br.com.ifpe.oxefood.modelo.produto.Produto;
@@ -25,7 +26,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/produto")
 @CrossOrigin
 public class ProdutoController {
-    
+
     @Autowired
     private ProdutoService produtoService;
 
@@ -76,6 +77,14 @@ public class ProdutoController {
             @RequestParam(value = "idCategoria", required = false) Long idCategoria) {
 
         return produtoService.filtrar(codigo, titulo, idCategoria);
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<Produto> saveImage(@PathVariable Long id,
+            @RequestParam(value = "imagem", required = true) MultipartFile imagem) {
+
+        Produto produto = produtoService.saveImage(id, imagem);
+        return new ResponseEntity<Produto>(produto, HttpStatus.CREATED);
     }
 
 }
